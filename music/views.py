@@ -20,7 +20,7 @@ class ListSongsView(generics.ListAPIView):
     filter_backends = (filters.SearchFilter,)
 
 
-permission_classes = (permissions.IsAuthenticated,)
+# permission_classes = (permissions.IsAuthenticated,)
 class PostSongsView(APIView):
     def post(self, request, *args, **kwargs):
         serializer = SongsSerializer(data=request.data)

@@ -26,15 +26,15 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-qwxgg%%t)(*6(3ed$3i+b6vz^z4mx!9fk9xho#oyx&!@dx(w=v'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-if os.getenv("DJANGO_DEBUG") == 'dev':
+if os.getenv('DJANGO_DEBUG', 'off') == 'dev':
     DEBUG = True
-    ALLOWED_HOSTS = ["127.0.0.1", "localhost", "[::1]"]
+    ALLOWED_HOSTS = ["127.0.0.1", "localhost", "[::1]", "13.231.210.130", "bakdoolot.ru", "www.bakdoolot.ru", "18.177.57.189"]
     CORS_ORIGIN_WHITELIST = [
         'https://localhost:3000'
     ]
 else:
     DEBUG = False
-    ALLOWED_HOSTS = ["54.238.213.148"]
+    ALLOWED_HOSTS = ["54.238.213.148", "13.231.210.130", "bakdoolot.ru", "www.bakdoolot.ru", "18.177.57.189"]
 
 # Application definition
 
