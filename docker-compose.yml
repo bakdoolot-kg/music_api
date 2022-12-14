@@ -1,0 +1,12 @@
+version: '3'
+    
+services:
+  web:
+    build: .
+    command: bash -c ./entrypoint.sh
+    volumes:
+      - .:/code
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgres://postgresAdmin:baku2006@music-api-database.cdga2vn2o2np.ap-northeast-1.rds.amazonaws.com:5432/music_api_db

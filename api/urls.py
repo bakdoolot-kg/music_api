@@ -13,12 +13,16 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from django.views.generic import TemplateView
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include, re_path
 from allauth.account.views import confirm_email
 from rest_framework_jwt.views import refresh_jwt_token, obtain_jwt_token
+from . import swagger
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -30,4 +34,9 @@ urlpatterns = [
               name='account_confirm_email'),
     re_path(r'^api/v1/auth/obtain_token/', obtain_jwt_token),
     re_path(r'^api/v1/auth/refresh_token/', refresh_jwt_token),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    path('swagger-ui/', TemplateView.as_view(
+      template_name='swagger-ui.html',
+      extra_context={'schema_url': 'openapi-schema'}
+    ), name='swagger-ui')
+] + staticfiles_urlpatterns() + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+

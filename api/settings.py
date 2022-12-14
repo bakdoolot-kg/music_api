@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 import os
+import dj_database_url
 from datetime import timedelta
 from pathlib import Path
 from dotenv import load_dotenv
@@ -28,13 +29,18 @@ SECRET_KEY = 'django-insecure-qwxgg%%t)(*6(3ed$3i+b6vz^z4mx!9fk9xho#oyx&!@dx(w=v
 # SECURITY WARNING: don't run with debug turned on in production!
 if os.getenv('DJANGO_DEBUG', 'off') == 'dev':
     DEBUG = True
-    ALLOWED_HOSTS = ["127.0.0.1", "localhost", "[::1]", "13.231.210.130", "bakdoolot.ru", "www.bakdoolot.ru", "18.177.57.189"]
+    ALLOWED_HOSTS = ["*", "127.0.0.1", "localhost", "[::1]", "13.231.210.130", "bakdoolot.ru", "www.bakdoolot.ru", "18.177.57.189"]
     CORS_ORIGIN_WHITELIST = [
         'https://localhost:3000'
     ]
+    CORS_ORIGIN_ALLOW_ALL = True
+    CORS_EXPOSE_HEADERS = ['Content-Type', 'X-CSRFToken']
+    CORS_ALLOW_CREDENTIALS = True
 else:
     DEBUG = False
     ALLOWED_HOSTS = ["54.238.213.148", "13.231.210.130", "bakdoolot.ru", "www.bakdoolot.ru", "18.177.57.189"]
+    CORS_EXPOSE_HEADERS = ['Content-Type', 'X-CSRFToken']
+    CORS_ALLOW_CREDENTIALS = True
 
 # Application definition
 
@@ -50,6 +56,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'rest_auth',
     'rest_auth.registration',
+    'corsheaders',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
@@ -92,7 +99,7 @@ ROOT_URLCONF = 'api.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -110,16 +117,21 @@ WSGI_APPLICATION = 'api.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': os.getenv("DB_NAME"),
-        'USER': os.getenv("DB_USER"),
-        'PASSWORD': os.getenv("DB_PASSWORD"),
-        'HOST': os.getenv("DB_HOST"),
-        'PORT': os.getenv("DB_PORT")
-    }
-}
+if os.environ.get('DATABASE_URL'):
+  DATABASES = {
+	'default': dj_database_url.config(default=os.environ.get('DATABASE_URL'))
+  }
+else:
+  DATABASES = {
+     'default': {
+         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+         'NAME': os.getenv("DB_NAME"),
+         'USER': os.getenv("DB_USER"),
+         'PASSWORD': os.getenv("DB_PASSWORD"),
+         'HOST': os.getenv("DB_HOST"),
+         'PORT': os.getenv("DB_PORT")
+     }
+  }
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
@@ -163,7 +175,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Media settings
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, "media_root")
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 # Prod settings
 
