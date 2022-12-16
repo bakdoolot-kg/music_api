@@ -26,7 +26,7 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    re_path('api/(?P<version>(v1|v2))/', include('music.urls')),
+    re_path('api/v1/', include('music.urls')),
     re_path(r'^rest-auth/', include('rest_auth.urls')),
     re_path(r'^rest-auth/registration/', include('rest_auth.registration.urls')),
     re_path(r'^account/', include('allauth.urls')),
@@ -40,3 +40,4 @@ urlpatterns = [
     ), name='swagger-ui')
 ] + staticfiles_urlpatterns() + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
+urlpatterns += swagger.urlpatterns
